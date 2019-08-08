@@ -1,0 +1,366 @@
+
+/**显示more操作框 */
+function showMoreBox(e, ownerInstance){
+  console.log('wxs showMoreBox ->',e)
+  var instance = ownerInstance.selectComponent('.book-more-box')
+  var masking = ownerInstance.selectComponent('.page-masking')
+  var pos = calcMoreBoxPosition(e)
+  instance.addClass(pos[1])
+  // instance.setStyle({
+  //   top:pos[0] + 'px'
+  // })
+  masking.addClass('masking-show')
+  return false
+}
+
+function hiddenMoreBox(e,ownerInstance){
+  console.log('wxs hiddenMoreBox ->', e)
+  var instance = ownerInstance.selectComponent('.book-more-box')
+  var masking = ownerInstance.selectComponent('.page-masking')
+  instance.removeClass('more-box-show')
+  instance.removeClass('more-box-show-up')
+  masking.removeClass('masking-show')
+}
+
+function calcMoreBoxPosition(e){
+  var y = e.touches[0]['clientY']
+  var expY = 252 + 80 + 20   // more-box Height, navativeBar Hieght, surplus height
+  if(y > expY){
+    var top = y - 252        // more-box Height
+    var className = 'more-box-show-up'
+  }else{
+    var top = y - 20      // 20 为自定义的一个调整量，无关其他
+    var className = 'more-box-show'
+  }
+  return [top,className]
+}
+
+var menuButtonOpen = false
+function showAddMenu(e,ownerInstance){
+  console.log('wxs showAddMenu ->',e)
+  var instanceList = ownerInstance.selectAllComponents('.menu-button')
+  var masking = ownerInstance.selectComponent('.page-masking')
+  console.log(instanceList)
+
+  if(!menuButtonOpen){
+    // 展开
+    for (var i = 0; i < instanceList.length; i++) {
+      var instance = instanceList[i]
+      console.log('instance ->', instance)
+      var id = instance.getDataset()['id']
+      console.log('getDataset id ->', id, menuButtonOpen)
+      instance.setStyle({
+        'transform': 'translateY(-' + id * 70 + 'px)',
+        'opacity':'1'
+      })
+      instance.addClass('menu-button-show')
+    }
+    menuButtonOpen = true
+    var addButton = ownerInstance.selectComponent('.add-button')
+    addButton.setStyle({
+      'transform': 'rotate(135deg)',
+    })
+    masking.addClass('masking-show')
+  }else{
+    // 收起
+    for (var i = 0; i < instanceList.length; i++) {
+      var instance = instanceList[i]
+      console.log('instance ->', instance)
+      var id = instance.getDataset()['id']
+      console.log('getDataset id ->', id, menuButtonOpen)
+      instance.setStyle({
+        'transform': 'translateY(0px)',
+        'opacity':'0'
+      })
+      instance.removeClass('menu-button-show')
+    }
+    menuButtonOpen = false
+    var addButton = ownerInstance.selectComponent('.add-button')
+    addButton.setStyle({
+      'transform': 'rotate(0deg)',
+    })
+    masking.removeClass('masking-show')
+  }
+
+}
+
+
+/**input输入框显示与否 */
+function inputTitle(e, ownerInstance) {
+  console.log('ownerInstance ->', ownerInstance)
+  if (ownerInstance != undefined) {
+    var instance = ownerInstance.selectComponent('.input')
+    var inputShow = instance.hasClass('test-input-show')
+    if (inputShow) {
+      instance.removeClass('input-show')
+    } else {
+      instance.addClass('input-show')
+      // 设置inputText为书Title
+      instance.callMethod('setInputText',e)
+    }
+  }
+}
+/**input输入框显示与否*/
+function inputBox(newValue, oldValue, ownerInstance, instance) {
+  if (typeof (newValue) == "boolean") {
+    var instance = ownerInstance.selectComponent('.input')
+    var inputShow = instance.hasClass('input-show')
+    if (inputShow) {
+      instance.removeClass('input-show')
+    } else {
+      instance.addClass('input-show')
+    }
+  }
+}
+
+/**点击蒙层，关闭弹窗 */
+function tapMasking(e, ownerInstance){
+  hiddenMoreBox(e, ownerInstance);
+  if (menuButtonOpen){
+    showAddMenu(e,ownerInstance) // 隐藏
+  }
+}
+
+
+/**折叠书架 */
+function foldBookshelf(e,ownerInstance){
+  var iclass= e.currentTarget.dataset.iclass
+  var fclass = e.currentTarget.dataset.fclass
+  var tclass = e.currentTarget.dataset.tclass
+  var icon = ownerInstance.selectComponent('.'+ iclass)
+  var title = ownerInstance.selectComponent('.' + tclass)
+  var folds = ownerInstance.selectAllComponents('.' + fclass)
+  if (icon.hasClass('b-icon-fold')){
+    icon.removeClass('b-icon-fold')
+    title.removeClass('b-title-fold')
+    for (var i = 0; i < folds.length; i++) {
+      var fold = folds[i]
+      var top = 65 * i
+      fold.setStyle({
+        height:'60px',
+        'margin-top': '1px',
+        opacity:1
+      })
+    }
+  }else{
+    icon.addClass('b-icon-fold')
+    title.addClass('b-title-fold')
+    for (var i = 0; i < folds.length; i++) {
+      var fold = folds[i]
+      var top = 65 * i
+      fold.setStyle({
+        height:'0px',
+        'margin-top':'0',
+        opacity:0
+      })
+    }
+  }
+
+}
+
+
+/**对书按时间排序 */
+function collate(bookList) {
+  var recentList = [bookList[0]];
+  for (var i = 1; i < bookList.length; i++) {
+    for (var j = recentList.length - 1; j >= 0; j--) {
+      // 判断兼容早期history为字符串类型
+      var ri = recentList[j]['history']['time']
+      var bi = bookList[i]['history']['time']
+      if (ri >= bi) {
+        recentList.splice(j + 1, 0, bookList[i])
+        break
+      } else if (j == 0) {
+        recentList.splice(j, 0, bookList[i])
+      }
+    }
+  }
+  // console.log('排序结果->',recentList)
+  return recentList
+}
+
+
+/**时间格式化-将getTime()时间格式化 */
+function timeFormatting(time){
+  var date = getDate()
+  var n_y = date.getFullYear()
+  var n_m = date.getMonth() + 1
+  var n_d = date.getDate()
+  date.setTime(time)
+  var y = date.getFullYear()
+  var m = date.getMonth() + 1
+  var d = date.getDate()
+  var h = date.getHours()
+  var mm = date.getMinutes()
+  if(m < 10)  m = '0' + m;
+  if(d <10) d = '0' + d;
+  if(h <10) h = '0' + h;
+  if(mm <10) mm ='0' +mm;
+  
+  if(n_y == y){
+    // 今年
+    if(n_m == m){
+      // 本月
+      if(n_d == d){
+        // 今天
+        var formatTime = '今天 · ' + h + ':' + mm
+        return formatTime
+      }else if(n_d == d + 1){
+        // 昨天
+        var formatTime = '昨天 · ' + h + ':' + mm
+        return formatTime
+      }else if(n_d == d + 2){
+        // 前天
+        var formatTime = '前天 · ' + h + ':' + mm
+        return formatTime
+      }else{
+        var formatTime = m + '月' + d + '日' + h + ':' + mm
+        return formatTime
+      }
+    }
+    var formatTime = y + '年' + m + '月' + d + '日'
+    return formatTime
+  }else{
+    var formatTime = y + '年' + m + '月' + d + '日'
+    return formatTime
+  }
+
+}
+
+
+/**字数格式化-将具体数字格式化为12.3W格式 */
+function numberFormating(n){
+  if(n < 1000){
+    return n
+  }else if(n < 10000){
+    var fn = n / 1000
+    fn = fn.toFixed(2)
+    return fn + 'k'
+  }else if(n < 1000000){
+    var fn = n / 10000
+    fn = fn.toFixed(2)
+    return fn + 'w'
+  }else{
+    // 字数超过100万
+    var fn = n / 10000
+    fn = fn.toFixed(2)
+    return fn + 'w'
+  }
+}
+
+/**判断书属于那种类型，本地，剪贴板缓存 or 仅云端 */
+function whatType(fileType){
+  if(fileType == ".txt"){
+    return 'local'
+  }else if(fileType == "catch"){
+    return 'catch'
+  }else if(!fileType){
+    return 'cloud'
+  }
+}
+
+
+/**more box 对不同书适配 */
+function moreBoxFit(newValue, oldValue, ownerInstance, instance){
+  var type = newValue;
+  console.log('moreBoxFit ->',type)
+  var m_u = ownerInstance.selectComponent('.m-u')     // 上传
+  var m_d = ownerInstance.selectComponent('.m-d')     // 下载
+  var m_s = ownerInstance.selectComponent('.m-s')     // 分享
+  var m_cs = ownerInstance.selectComponent('.m-cs')   // 复制分享口令
+  var m_sc = ownerInstance.selectComponent('.m-sc')   // 取消分享
+  var m_r = ownerInstance.selectComponent('.m-r')     // 重命名
+  var m_de = ownerInstance.selectComponent('.m-de')   // 删除
+  var all_list = [m_u,m_d,m_s,m_cs,m_sc,m_r,m_de]
+  // 初始化
+  for(var i=0; i<all_list.length; i++){
+    if (all_list[i].hasClass('item-unavailable')){
+      all_list[i].removeClass('item-unavailable')
+    }
+  }
+  var m_list;
+  if(type < 5){
+    // 本地
+    if(type < 3){
+      // 未上传
+      m_list = [m_d,m_cs,m_sc]
+    }else{
+      // 上传
+      if(type == 3){
+        // 未分享
+        m_list = [m_cs,m_sc]
+      }else{
+        // 已分享
+        m_list = [m_s]
+      }
+    }
+  }else{
+    // 云端
+    var m_list = [m_u,m_s,m_cs,m_sc,m_r,m_cs]
+  }
+  for (i = 0; i < m_list.length; i++) {
+    m_list[i].addClass('item-unavailable')
+  }
+}
+
+
+/**返回text指定长度（l），多余的以‘...’显示
+ * type='0' ,表示不区分中文、英文； 默认
+ * type ='1', 表示区分中英文，一个中文相当于两个英文字母，l表示中文字数
+ * wxs中好像匹配全角字符有问题，
+ */
+function textSlice(text, l, type = '0') {
+  if (text) {
+    if (type == '0') {
+      if (text.length >= 0) {
+        return text.substring(0, l) + '...'
+      } else {
+        console.log('type 0 , 较短字符')
+        return text
+      }
+    } else if (type == '1') {
+      var returnText = ''
+      var hanPattern = getRegExp("/[^\x00-\xff]/")
+      if (text.length > l) {
+        l = l * 2
+        for (var i = 0; i < l; i++) {
+          if (text.substring(i, i + 1).match(hanPattern)) {
+            // 全角字符 \ 双字节字符
+            returnText = returnText + text.substring(i, i + 1)
+            l = l - 1
+          } else if (text.substring(i, i + 1) == '') {
+            console.log('遇到字符串结尾')
+            // 字符串结尾
+            return text
+          } else {
+            // 半角字符
+            returnText = returnText + text.substring(i, i + 1)
+          }
+        }
+        returnText = returnText + '...'
+      } else {
+        console.log('较短字符')
+        returnText = text
+      }
+      return returnText
+    }
+  }
+}
+
+
+
+module.exports = {
+  showMoreBox: showMoreBox,
+  hiddenMoreBox: hiddenMoreBox,
+  showAddMenu: showAddMenu,
+  inputTitle: inputTitle,
+  inputBox: inputBox,
+  tapMasking: tapMasking,
+  foldBookshelf: foldBookshelf,
+  collate: collate,
+  timeFormatting: timeFormatting,
+  numberFormating: numberFormating,
+  whatType:whatType,
+  moreBoxFit: moreBoxFit,
+  textSlice: textSlice,
+}

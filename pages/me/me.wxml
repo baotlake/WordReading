@@ -1,0 +1,46 @@
+<!--pages/me/me.wxml-->
+<wxs module="me" src="me.wxs" />
+<view class="me-container">
+  <image class="me-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/afternoon-41-min.jpg" data-src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/me-background.jpg" />
+  <open-data class="me-avatar" type="userAvatarUrl"></open-data>
+  <open-data class="me-nickname" type="userNickName"></open-data>
+</view>
+
+<!--view class="item-box link-me">
+  <view class="item-use">使用情况</view>
+  <canvas canvas-id="use_info" class="use-canvas" />
+</view-->
+
+<view class="item-box">
+  <view class="item-bar-title">TO DO</view>
+  <block wx:for="{{todo}}" wx:for-index="index">
+    <view class="todo-bar" data-index="{{index}}" data-todo="edit" bindtap="{{me.inputTodo}}">{{item}}</view>
+  </block>
+  <view class="todo-bar" data-todo="new" bindtap="{{me.inputTodo}}">+</view>
+
+  <view class="share-button">
+    <text>分享</text>
+    <button class="share-button-button" plain_del open-type='share'></button>
+  </view>
+
+  <view class="feedback-button">
+    <text >意见反馈</text>
+    <button class="feedback-button-button" open-type="feedback" />
+  </view>
+    <view class="bottom-fix" />
+</view>
+
+
+
+
+<view hidden class="request-authorize">
+  <view class="req-auth-tip">我们需要您的一些信息，以便给您提供更好的服务</view>
+  <button size="mini" type="primary" open-type="getUserInfo">授权</button>
+</view >
+
+
+<!--文本编辑区-->
+<textarea class="text-edit" value="{{textareaValue}}" placeholder="💡在这里输入~" focus="{{inputFocus}}" auto-height="true" cursor-spacing="24px" bindinput="input" bindblur="{{me.inputDone}}">
+</textarea>
+
+

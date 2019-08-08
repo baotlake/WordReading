@@ -1,0 +1,60 @@
+{
+  "pages": [
+    "pages/bookshelf/bookshelf",
+    "pages/reading/reading",
+    "pages/logs/logs",
+    "pages/wordbook/wordbook",
+    "pages/me/me",
+    "pages/store/store",
+    "pages/storeList/storeList"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "WeChat",
+    "navigationBarTextStyle": "black"
+  },
+  "requiredBackgroundModes": [
+    "audio"
+  ],
+  "tabBar": {
+    "color": "#888888",
+    "selectedColor": "#1c80ff",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/bookshelf/bookshelf",
+        "iconPath": "data/tabbar/bookshelf_b.png",
+        "selectedIconPath": "data/tabbar/bookshelf.png",
+        "text": "书架"
+      },
+      {
+        "pagePath": "pages/store/store",
+        "iconPath": "data/tabbar/find_b.png",
+        "selectedIconPath": "data/tabbar/find.png",
+        "text": "发现"
+      },
+      {
+        "pagePath": "pages/wordbook/wordbook",
+        "iconPath": "data/tabbar/word_b.png",
+        "selectedIconPath": "data/tabbar/word.png",
+        "text": "生词本"
+      },
+      {
+        "pagePath": "pages/me/me",
+        "iconPath": "data/tabbar/me_b.png",
+        "selectedIconPath": "data/tabbar/me.png",
+        "text": "我"
+      }
+    ]
+  },
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.0",
+      "provider": "wx069ba97219f66d99"
+    }
+  },
+  "sitemapLocation": "sitemap.json"
+}

@@ -1,0 +1,169 @@
+<!--pages/store/store.wxml-->
+<wxs module="store" src="store.wxs"/>
+<wxs module="setNavHeight" src="../../js/setNavHeight.wxs" />
+<view class="store-bg" />
+
+<view class="navigationBar" wxs="{{systemInfo}}" change:wxs="{{setNavHeight.setNavHeight}}">
+  <!--view class="nav-title">发现</view-->
+  <view class="nav-input">
+    <image hidden class="nav-input-icon" src="../../data/icon/search.svg" />
+    <view input class="input" placeholder="发现" value="{{findInput}}" bindfocus="{{store.inputFocus}}" bindblur="{{store.loseFocus}}" bindinput="findInput" bindconfirm="test_getShareBook" >发现</view>
+    <!--发现搜索还不可用。-->
+    <image wx:if="{{findInput != ''}}" class="input-clear" src="../../data/icon/cancel.svg" bindtap="findInputClear" />
+  </view>
+</view>
+
+
+<!--view class="store-page">
+  <swiper class="store-swiper">
+    <swiper-item class="swiper-item" circular indicator-dots>
+      <image class="swiper-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/the-great-gatsby.png" data-="" bindtap="" />
+    </swiper-item>
+    <swiper-item class="swiper-item">
+      <image class="swiper-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/the-shawshank-redemption.png" data-="" bindtap="" />
+    </swiper-item>
+    <swiper-item class="swiper-item">
+      <image class="swiper-image" src="../../data/image.png" data-="" bindtap="" />
+    </swiper-item>
+  </swiper>
+  <view class="group-container">
+    <block wx:for="{{1}}">
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/小故事.png" />
+        <text hidden class="group-box-title">book{{index}}</text>
+      </view>
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/经典文学.png" />
+      </view>
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/gaozhogn.png" />
+      </view>
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/cet-4.png" />
+      </view>
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/cet-6.png" />
+      </view>
+      <view class="group-box">
+        <image class="group-box-bg" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/kaoyan.png" />
+      </view>
+    </block>
+  </view>
+</view-->
+
+
+<view class="book-detail-subpage">
+  <swiper class="swiper" circular previous-margin="60rpx" next-margin="60rpx">
+    <!--block wx:for="{{swiperBookList}}">
+      <swiper-item>
+        <view class="detail-swiper" data-index="{{index}}" bindtap="tapSwiper">
+          <image class="detail-image" src="{{item['image']}}" />
+        </view>
+      </swiper-item>
+    </block-->
+    <swiper-item>
+      <view class="detail-swiper" wxs="{{systemInfo}}" change:wxs="{{store.setSwiperPos}}">
+        <image class="detail-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/pexels-photo-2088170.jpeg" />
+        <view class="icon-container">
+          <view class="swiper-title">四级</view>
+          <view class="swiper-icon-view" data-type1="cet4" data-type2="reading" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/read-1.png" />
+            <text>阅读</text>
+          </view>
+          <view class="swiper-icon-view" data-type1="cet4" data-type2="listening" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/headphones-2592263__480.jpg" />
+            <text>听力</text>
+          </view>
+          <view/>
+          <view class="swiper-icon-view" data-type1="cet4" data-type2="writing" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/write-12.png" />
+            <text>写作</text>
+          </view>
+          <view class="swiper-icon-view" data-type1="cet4" data-type2="translate" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/fanyi_icon-img.png" />
+            <text>翻译</text>
+          </view>
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/wanxing_icon_img.jpg" />
+            <text>完形</text>
+          </view-->
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/yuedu_icon_img.png" />
+            <text>阅读</text>
+          </view-->
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="detail-swiper">
+        <image class="detail-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/adventure-fog-mountains-161173.jpg" />
+        <view class="icon-container">
+          <view class="swiper-title">六级</view>
+          <view class="swiper-icon-view" data-type1="cet6" data-type2="reading" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/read-1.png" />
+            <text>阅读</text>
+          </view>
+          <view class="swiper-icon-view" data-type1="cet6" data-type2="listening" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/headphones-2592263__480.jpg" />
+            <text>听力</text>
+          </view>
+          <view/>
+          <view class="swiper-icon-view" data-type1="cet6" data-type2="writing" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/write-12.png" />
+            <text>写作</text>
+          </view>
+          <view class="swiper-icon-view" data-type1="cet6" data-type2="translate" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/fanyi_icon-img.png" />
+            <text>翻译</text>
+          </view>
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/wanxing_icon_img.jpg" />
+            <text>完形</text>
+          </view-->
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/yuedu_icon_img.png" />
+            <text>阅读</text>
+          </view-->
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="detail-swiper">
+        <image class="detail-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/adventure-architecture-bay-7.png" />
+        <view class="icon-container">
+          <view class="swiper-title">考研</view>
+          <view class="swiper-icon-view" data-type1="postgraduate" data-type2="reading" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/read-1.png" />
+            <text>阅读</text>
+          </view>
+          <!--view class="swiper-icon-view" data-type1="postgraduate" data-type2="listening" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/headphones-2592263__480.jpg" />
+            <text>听力</text>
+          </view-->
+          <view class="swiper-icon-view" data-type1="postgraduate" data-type2="writing" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/write-12.png" />
+            <text>写作</text>
+          </view>
+          <view class="swiper-icon-view" data-type1="postgraduate" data-type2="translate" bindtap="goStoreList">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/fanyi_icon-img.png" />
+            <text>翻译</text>
+          </view>
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/wanxing_icon_img.jpg" />
+            <text>完形</text>
+          </view-->
+          <!--view class="swiper-icon-view">
+            <image class="swiper-icon-i" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/yuedu_icon_img.png" />
+            <text>阅读</text>
+          </view-->
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>
+
+
+
+
+
+

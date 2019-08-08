@@ -1,0 +1,291 @@
+/* pages/bookshelf/bookshelf.wxss */
+@import '../../template/template.wxss';
+
+.page-background{
+  /*background-color:#ddd;*/
+  background-color:#eee;
+  width:100vw;
+  height:100vh;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:0;
+}
+
+.navigationBar{
+  width:100vw;
+  height:60px;
+  position:fixed;
+  z-index:10;
+  align-items:center;
+  padding-top:20px;
+  display:flex;
+  /*background-color:#1c80ff;*/
+  box-shadow:2px 0px 20px rgba(0,0,0,0.08);
+  color:#fff;
+  background:linear-gradient(to right, #1c80ff, #05AFF2);
+}
+.nav-title{
+  height:32px;
+  line-height:32px;
+  font-size:16px;
+  margin-left:15px;
+}
+.nav-button{
+  height:20px;
+  width:20px;
+  padding:6px;
+  margin-left:10px;
+  /*background-color:#fff;*/
+  border-radius:16px;
+}
+
+
+.bookshelf{
+  padding-top:100px;
+  padding-bottom:100px;
+  overflow:hidden;
+}
+
+.books-infobar-container{
+  position:relative;
+}
+.bookshelf-title-bar{
+  height:30px;
+  align-items:center;
+  display:flex;
+  padding-top:10px;
+}
+.bookshelf-title{
+  margin-left:15px;
+  font-size:14px;
+}
+.bookshelf-icon{
+  position:absolute;
+  width:30px;
+  height:30px;
+  right:15px;
+  transition:all 0.5s;
+}
+.b-icon-fold{
+  transform:rotate(90deg);
+}
+
+
+.books-infobar{
+  background-color:#fff;
+  height:50px;
+  width:calc(100% - 30px);
+  display:flex;
+  align-items:center;
+  padding: 5px 15px;
+}
+.books-image{
+  width:31px;
+  height:50px;
+}
+.book-info{
+  display:block;
+  padding-left:15px;
+}
+.books-title{
+  font-size:17px;
+  display:block;
+}
+.b-title-fold{
+  border-bottom:1px solid #05AFF2;
+}
+.info-detail{
+  display:flex;
+}
+.detail-icon{
+  display:inline-block;
+  width:15px;
+  height:15px;
+  margin:0 7.5px;
+}
+.books-icon{
+  width:30px;
+  height:30px;
+  position:absolute;
+  right:15px;
+}
+.books-last{
+  font-size:10px;
+}
+.book-fold{
+  position:relative;
+  height:60px;
+  transition:all 0.5s;
+  margin-top:1px;
+}
+.book-empty-img{
+  position:relative;
+  height:60px;
+  width:60px;
+  left:calc((100% - 60px) / 2);
+}
+
+
+@keyframes fold{
+  0%{
+
+  }
+  50%{
+  
+  }
+  100%{
+    height:0px;
+  }
+}
+
+.page-masking{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  display:none;
+  background-color:rgba(0,0,0,0.32);
+}
+.masking-show{
+  display:block;
+}
+
+
+.book-more-box{
+  width:0;
+  transform:scaleY(0);
+  opacity:0;
+
+  border-radius:5px;
+  background-color:#fff;
+  box-shadow:0 0 10px rgba(0,0,0,0.3);
+
+  position:fixed;
+  top:100px;
+  /*right:40px;*/
+  right:calc((100vw - 140px) / 2);
+  overflow:hidden;
+  
+  transition:all 0.3s, top 0.1s;
+}
+.more-box-show{
+  top:120px;
+  width:140px;
+  transform:scaleY(1);
+  transform-origin: 0 0;
+  opacity:1;
+}
+.book-title{
+  height:32px;
+  line-height:32px;
+  text-align:center;
+  font-size:14px;
+}
+.more-box-show-up{
+  width:140px;
+  transform:scaleY(1);
+  transform-origin: 0 100%;
+  opacity:1;
+}
+.book-more-item{
+  height:32px;
+  margin: 5px 10px;
+  align-items:center;
+  display:flex;
+}
+.item-unavailable{
+  display:none;
+  /*opacity:0.3;*/
+}
+.item-icon{
+  width:20px;
+  height:20px;
+  padding:6px;
+}
+.item-title{
+  height:30px;
+  line-height:30px;
+  font-size:14px;
+}
+
+.add-container{
+
+}
+.add-button-shadow{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  width:30px;
+  height:30px;
+  padding:15px;
+  border-radius:30px;
+  box-shadow:1px 1px 10px rgba(0,0,0,0.3);
+}
+.add-button{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  width:30px;
+  height:30px;
+  padding:15px;
+  border-radius:30px;
+  /*background-color:#ccf;*/
+  background-color:#1c80ff;
+  z-index:100;
+  transition:all 0.5s ease-in-out;
+}
+.menu-button{
+  position:fixed;
+  right:15px;
+  bottom:15px;
+  width:60px;
+  height:60px;
+  z-index:90;
+  transition:all 0.3s;
+  opacity:0;
+}
+.menu-button-show{
+  width:500px;
+}
+.menu-button-icon{
+  position:absolute;
+  right:0;
+  bottom:0;
+  width:30px;
+  height:30px;
+  padding:15px;
+  border-radius:30px;
+  box-shadow:1px 1px 10px rgba(0,0,0,0.3);
+  background-color:#fff;
+}
+.menu-tip{
+  position:absolute;
+  right:70px;
+  top:18px;
+  height:24px;
+  line-height:24px;
+  font-size:14px;
+  color:#fff;
+  padding:0 10px;
+  border-radius:7px;
+  background-color:#333;
+  box-shadow:1px 1px 10px rgba(0,0,0,0.3);
+}
+
+/**未使用*/
+.button-pop{
+  animation:pop 0.6s;
+}
+@keyframes pop{
+  0%{
+    transform:scale(0.9)
+  }
+  50%{
+    transform:scale(1.1)
+  }
+  100%{
+    transtorm:scale(0.9)
+  }
+}

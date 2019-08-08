@@ -1,0 +1,56 @@
+/**书名输入框样式*/
+.input{
+  position:fixed;
+  top:80px;
+  left:160px;
+  width:0px;
+  height:0px;
+  overflow:hidden;
+  opacity:0;
+  transition:all 0.5s;
+}
+.input-show{
+  display:block;
+  position:fixed;
+  height:100px;
+  width:220px;
+  top:calc(25vh - 30px);
+  left:calc((100vw - 260px) / 2);
+  background-color:#fff;
+  border-radius:10px;
+  padding:20px;
+  box-shadow:0 0 10px #888;
+  opacity:1;
+  z-index:50;
+}
+.input-prompt{
+  font-size:1em;
+}
+.input-masking{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  opacity:0.6;
+  background-color:#333;
+}
+.input-input{
+  border-bottom:1px solid #aaf;
+  height:30%;
+  margin:10px 0 5px 0;
+}
+.input-button{
+  display:inline-block;
+  position:relative;
+  font-size:0.8em;
+  width:40px;
+  height:25%;
+  line-height:25px;
+  text-align:center;
+  transition:all 0.5s;
+}
+#input-cancel{
+  margin-left:calc(100% - 80px);
+  color:#555;
+}

@@ -1,0 +1,26 @@
+// 点击后显示点击态
+function tapAction(e,owner){
+  console.log('hover id=>', e.currentTarget.id)
+  var id = e.currentTarget.id
+  var playclass = e.currentTarget.dataset.play
+  var hover = owner.selectComponent('#' + id)
+  if (hover.hasClass(playclass)) {
+    hover.removeClass(playclass)
+    hover.addClass(playclass + '1')
+  } else {
+    hover.removeClass(playclass + '1')
+    hover.addClass(playclass)
+  }
+  var bind = e.currentTarget.dataset.mybind  //逻辑层
+  if (bind) {
+    console.log('cal method ->', bind)
+    hover.callMethod(bind, e)
+  } else {
+    console.log('bind false ->', bind)
+  }
+}
+
+
+module.exports = {
+  tapAction: tapAction
+}

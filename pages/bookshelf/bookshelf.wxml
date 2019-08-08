@@ -1,0 +1,151 @@
+<!--pages/bookshelf/bookshelf.wxml-->
+<!--text>pages/bookshelf/bookshelf.wxml</text-->
+<view class="page-background"/>
+<wxs module="bookshelf" src="bookshelf.wxs"/>
+<wxs module="setNavHeight" src="../../js/setNavHeight.wxs" />
+
+
+<view class="navigationBar" wxs="{{systemInfo}}" change:wxs="{{setNavHeight.setNavHeight}}">
+  <!--view class="nav-title">书架</view-->
+  <image class="nav-button" src="../../data/icon/read.svg" bindtap="toReadPage"></image>
+  <image class="nav-button" src="../../data/icon/clipboard.svg" bindtap="getClipboard"></image>
+</view>
+
+<view class="bookshelf">
+  <view class="books-infobar-container">
+    <view class="bookshelf-title-bar b-t-r" data-iclass="b-r-i" data-fclass="b-f" data-tclass="b-t-r" bindtap="{{bookshelf.foldBookshelf}}">
+      <text class="bookshelf-title">最近{{(booksList.length >= 5)?' - 5':' - ' + booksList.length}}</text>
+      <image class="bookshelf-icon b-r-i" src="../../data/icon/more.svg" />
+    </view>
+    <block wx:for="{{(booksList.length >= 5)?5:booksList.length}}">
+      <view class="book-fold b-f">
+        <template is="bookItem" data="{{book:bookshelf.collate(booksList)[index],bstype:'recently'}}" />
+      </view>
+    </block>
+    <view wx:if="{{booksList.length == 0}}" class="book-fold b-f">
+      <image class="book-empty-img" src="../../data/nullBookshelf.svg"/>
+    </view>
+  </view>
+
+  <view class="books-infobar-container">
+    <view class="bookshelf-title-bar b-t-a" data-iclass="b-a-i" data-fclass="b-f-a" data-tclass="b-t-a" bindtap="{{bookshelf.foldBookshelf}}">
+      <text class="bookshelf-title">本地{{' - ' + booksList.length}}</text>
+      <image class="bookshelf-icon b-a-i" src="../../data/icon/more.svg" />
+    </view>
+    <block wx:for="{{booksList}}" wx:for-item="book">
+      <view class="book-fold b-f-a">
+        <template is="bookItem" data="{{book,bstype:'local'}}" />
+      </view>
+    </block>
+    <view wx:if="{{booksList.length == 0}}" class="book-fold b-f-a">
+      <image class="book-empty-img" src="../../data/nullBookshelf.svg"/>
+    </view>
+  </view>
+
+   <view class="books-infobar-container">
+    <view class="bookshelf-title-bar b-t-cl" data-iclass="b-cl-i" data-fclass="b-f-cl" data-tclass="b-t-cl" bindtap="{{bookshelf.foldBookshelf}}">
+      <text class="bookshelf-title">云端{{' - ' + cloudBooksList.length}}</text>
+      <image class="bookshelf-icon b-cl-i" src="../../data/icon/more.svg" />
+    </view>
+    <block wx:for="{{cloudBooksList}}" wx:for-item="book">
+      <view class="book-fold b-f-cl">
+        <template is="bookItem" data="{{book,bstype:'cloud'}}" />
+      </view>
+    </block>
+    <view wx:if="{{cloudBooksList.length == 0}}" class="book-fold b-f-cl">
+      <image class="book-empty-img" src="../../data/nullBookshelf.svg"/>
+    </view>
+  </view>
+
+</view>
+
+<!--右下角加号菜单-->
+<view class="add-container" bindtap="{{bookshelf.showAddMenu}}">
+  <view class="add-button-shadow" />
+  <image class="add-button" src="../../data/icon/plus.svg" />
+  <view class="menu-button" data-id="1">
+    <image class="menu-button-icon" src="../../data/icon/save_blue.svg" data-type="newBook" bindtap="{{bookshelf.inputTitle}}"/>
+    <text class="menu-tip">保存剪贴板内容</text>
+  </view>
+  <view class="menu-button" data-id="2">
+    <image class="menu-button-icon" src="../../data/icon/clipboard_blue.svg"  bindtap="getClipboard"/>
+    <text class="menu-tip">打开剪贴板内容</text>
+  </view>
+  <view class="menu-button" data-id="3">
+    <image class="menu-button-icon" src="../../data/icon/share.svg" bindtap="getShareBook"/>
+    <text class="menu-tip">获取分享</text>
+  </view>
+  <view hidden class="menu-button" data-id="4">
+    <image class="menu-button-icon" src="" />
+    <text class="menu-tip"></text>
+  </view>
+  
+</view>
+
+<!--蒙层，弹出窗口时出现，点击此层，关闭弹窗-->
+<view class="page-masking" bindtap="{{bookshelf.tapMasking}}" />
+
+<!--书，更多选项-->
+<view class="book-more-box"  bindtap="{{bookshelf.hiddenMoreBox}}" type="{{currentBook.type}}" change:type="{{bookshelf.moreBoxFit}}">
+  <view class="book-title">{{currentBook.title}}</view>
+  <view class="book-more-item">
+    <image class="item-icon m-c" src="../../data/icon/cancel.svg" />
+    <text class="item-title">取消</text>
+  </view>
+  <view class="book-more-item m-u" bindtap="upload">
+    <image class="item-icon" src="../../data/icon/cloud_blue.svg" />
+    <text class="item-title">上传</text>
+  </view>
+  <view class="book-more-item m-d" bindtap="download">
+    <image class="item-icon" src="../../data/icon/cloud_download.svg" />
+    <text class="item-title">下载</text>
+  </view>
+  <view class="book-more-item m-s" bindtap="shareBook">
+    <image class="item-icon" src="../../data/icon/share.svg" />
+    <text class="item-title">分享</text>
+  </view>
+  <view class="book-more-item m-cs" bindtap="shareBook">
+    <image class="item-icon" src="../../data/icon/share.svg" />
+    <text class="item-title">复制分享口令</text>
+  </view>
+  <view class="book-more-item m-sc" bindtap="cancelShare">
+    <image class="item-icon" src="../../data/icon/share_grey.svg" />
+    <text class="item-title">取消分享</text>
+  </view>
+  <view class="book-more-item m-r" data-type="bookTitle" bindtap="{{bookshelf.inputTitle}}">
+    <image class="item-icon" src="../../data/icon/rename_cursor.svg" />
+    <text class="item-title">重命名</text>
+  </view>
+  <view class="book-more-item m-de" bindtap="deleteBook">
+    <image class="item-icon" src="../../data/icon/delete_red.svg" />
+    <text class="item-title">删除</text>
+  </view>
+  <view class="book-more-item m-m" bindtap="">
+    <image class="item-icon" src="../../data/icon/more.svg" />
+    <text class="item-title">更多</text>
+  </view>
+</view>
+
+<!--书名输入框 test-->
+<view  input="{{inputBox}}" change:input="{{bookshelf.inputBox}}" class="input">
+  <!--view class="input-masking"/-->
+  <text class="input-prompt">请输入标题:</text>
+  <input class="input-input" value="{{inputText}}" placeholder="book1" focus="{{index.inputFocus}}" data-certain="true" bindconfirm="inputDo" bindinput="getInput"></input>
+  <view class="input-button" id="input-cancel" data-certain="false" bindtap="inputDo">取消</view>
+  <view class="input-button" data-certain="true" bindtap="inputDo">确定</view>
+</view>
+
+
+<template name="bookItem">
+  <view class="books-infobar" data-id="{{book['id']}}" bindtap="tapBook" >
+    <image class="books-image" src="../../data/icon/image.svg"/>
+    <view class="book-info">
+      <text class="books-title" data-id="{{book['id']}}">{{book['title']}}</text>
+      <view class="info-detail">
+        <text class="books-last">{{(book['history']['time'])?bookshelf.timeFormatting(book['history']['time']) + ' · ':''}}{{bookshelf.numberFormating(book['info']['len'])}}字</text>
+        <image class="detail-icon" wx:if="{{book['cloud'][0]}}" src="../../data/icon/cloud.svg" />
+      </view>
+    </view>
+    <image class="books-icon" src="../../data/icon/more.svg" data-id="{{book['id']}}" data-w="{{bstype}}" data-type="{{bookshelf.whatType(book['fileType'])}}" bindtouchstart="setCurrentBook" bindtap="{{bookshelf.showMoreBox}}" />
+  </view>
+</template>

@@ -1,0 +1,35 @@
+<!--pages/storeList/storeList.wxml-->
+<wxs module="storeList" src="storeList.wxs"/>
+<wxs module="setNavHeight" src="../../js/setNavHeight.wxs" />
+
+<view class="cover-image">
+  <image class="cover-image-image" src="cloud://release-bf6b22.7265-release-bf6b22/dev-test/storeList-bg-sdfs.jpg" />
+  <image class="navigate-back navigationBar" id="n-b" src="../../data/icon/back_w.svg" data-play="hover" data-mybind="navigateBack" bindtap="{{storeList.tapAction}}" systemInfo="{{systemInfo}}" change:systemInfo="{{setNavHeight.setNavPadding}}" />
+</view>
+
+<view class="item-box">
+  <view class="style-fix" />
+  <view class="title-text">{{listTitle}}</view>
+  <block wx:if="{{dataList.length > 0}}" wx:for="{{dataList}}">
+    <template is="ListItem" data="{{data:item,index}}" />
+  </block>
+  <block wx:if="{{! dataList.length > 0}}" wx:for="{{10}}">
+    <template is="placeholder" data="{{data}}" />
+  </block>
+</view>
+
+<!--显示的书的样式模板-->
+<template name="ListItem">
+  <view class="list-item" data-sharelink="{{data['shareLink']}}" bindtap="downloadBookAndGo">
+    <image class="item-icon" src="../../data/icon/image.svg" />
+    <view class="item-title {{(index == 0)?'item-title-first':''}}">{{data['title']}}</view>
+  </view>
+</template>
+
+<!--未加载完成时显示的占位模板-->
+<template name="placeholder">
+  <view class="list-item">
+    <image class="item-icon placeholder" src="" />
+    <view class="item-title-placeholder"></view>
+  </view>
+</template>

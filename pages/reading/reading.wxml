@@ -1,0 +1,211 @@
+<!--reading.wxml-->
+<wxs module="reading" src="reading.wxs"/>
+<wxs module="setNavHeight" src="../../js/setNavHeight.wxs" />
+
+<view class="reading-background" />
+
+<!--阅读视图-->
+<swiper class="swiper" duration="450" vertical circular easing-function="easeInOutCubic" bindchange="swiperChange" display-multiple-items="1" previous-margin="0px">
+  <swiper-item class="swiper-item">
+    <scroll-view class="article-container-scroll" wx:if="{{page['swiper'] == 0}}" scroll-top="{{(page['slip']==-1)?'1e10':'10'}}" scroll-into-view="{{scrollTo}}" scroll-y='true' bindscroll="{{reading.navScroll}}">
+      <view class="article-container" bindtouchstart="{{reading.hiddenAll}}" now="{{page['now']}}" change:now="{{reading.clearColour}}">
+        <view class="sentence-container" id="s-{{sindex}}" wx:for="{{wordList}}" wx:for-item="sentence" wx:for-index="sindex" data-sindex="{{sindex}}" bindtouchstart="{{reading.touchStart}}" bindtouchmove="{{reading.touchMove}}" bindtouchend="{{reading.touchEnd}}">
+          <text class="word-container" id = "{{'w-' + sindex + '-' + windex}}" wx:for="{{sentence}}" wx:for-item="word" wx:for-index="windex" data-sindex="{{sindex}}" data-windex="{{windex}}" bindtap="lookUpWord" bindtap_del="{{reading.lookupWord}}" selectable >{{word}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <!--翻页加载动画-->
+    <view wx:else class="page-loading">
+      <view class="loading" id="l-1" />
+      <view class="loading" id="l-2" />
+      <view class="loading" id="l-3" />
+      <view class="page-loading-tip">加载中</view>
+    </view>
+    <view class="swiper-border" />
+  </swiper-item>
+  <swiper-item class="swiper-item" wx:if="{{page['sum']>1}}">
+    <scroll-view class="article-container-scroll" wx:if="{{page['swiper'] == 1}}" scroll-top="{{(page['slip']==-1)?'1e10':'10'}}" scroll-into-view="{{scrollTo}}" scroll-y='true' bindscroll="{{reading.navScroll}}">
+      <view class="article-container" bindtouchstart="{{reading.hiddenAll}}" now="{{page['now']}}" change:now="{{reading.clearColour}}">
+        <view class="sentence-container" id="s-{{sindex}}" wx:for="{{wordList}}" wx:for-item="sentence" wx:for-index="sindex" data-sindex="{{sindex}}" bindtouchmove="{{reading.touchMove}}" bindtouchend="{{reading.touchEnd}}">
+          <text class="word-container" id = "{{'w-' + sindex + '-' + windex}}" wx:for="{{sentence}}" wx:for-item="word" wx:for-index="windex" data-sindex="{{sindex}}" data-windex="{{windex}}" bindtap="{{reading.lookupWord}}" selectable >{{word}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <!--翻页加载动画-->
+    <view wx:else class="page-loading">
+      <view class="loading" id="l-1" />
+      <view class="loading" id="l-2" />
+      <view class="loading" id="l-3" />
+      <view class="page-loading-tip">加载中</view>
+    </view>
+    <view class="swiper-border" />
+  </swiper-item>
+  <swiper-item class="swiper-item" wx:if="{{page['sum']>1}}">
+    <scroll-view class="article-container-scroll" wx:if="{{page['swiper'] == 2}}" scroll-top="{{(page['slip']==-1)?'1e10':'10'}}" scroll-into-view="{{scrollTo}}" scroll-y='true' bindscroll="{{reading.navScroll}}" >
+      <view class="article-container" bindtouchstart="{{reading.hiddenAll}}" now="{{page['now']}}" change:now="{{reading.clearColour}}">
+        <view class="sentence-container" id="s-{{sindex}}" wx:for="{{wordList}}" wx:for-item="sentence" wx:for-index="sindex" data-sindex="{{sindex}}" bindtouchmove="{{reading.touchMove}}" bindtouchend="{{reading.touchEnd}}">
+          <text class="word-container" id = "{{'w-' + sindex + '-' + windex}}" wx:for="{{sentence}}" wx:for-item="word" wx:for-index="windex" data-sindex="{{sindex}}" data-windex="{{windex}}" bindtap="{{reading.lookupWord}}" selectable >{{word}}</text>
+        </view>
+      </view>
+    </scroll-view>
+    <!--翻页加载动画-->
+    <view wx:else class="page-loading">
+      <view class="loading" id="l-1" />
+      <view class="loading" id="l-2" />
+      <view class="loading" id="l-3" />
+      <view class="page-loading-tip">加载中</view>
+    </view>
+    <view class="swiper-border" />
+  </swiper-item>
+</swiper>
+
+
+<!--加载中动画, 查词-->
+<view class="loading-an" word="{{lookUp_result['word']}}" change:word="{{reading.hiddenLoading}}">
+  <view class="loading" id="l-1" />
+  <view class="loading" id="l-2" />
+  <view class="loading" id="l-3" />
+</view >
+
+
+<!--顶部按钮栏-->
+<!--view class="top-column" nav="{{systemInfo}}" change:nav="{{reading.setNavData}}"-->
+<view class="top-column">
+  <view class="operate-bar">
+    <image class="nav-button" src="../../data/icon/catalog.svg" id="ncl" data-play="hover" bindtap="{{reading.catalogBox}}" data-tip="书签/页码/目录" bindlongtap="longtapTip" />
+    <image class="nav-button" src="../../data/icon/sound.svg" id="nsd" data-play="hover" bindtap="{{reading.hover}}" data-tip="朗读文章" bindlongtap="longtapTip" />
+    <image class="nav-button" src="../../data/icon/tag.svg" id="ntg" data-play="hover" data-mybind="openSaveBookmark" bindtap="{{reading.hover}}"  data-tip="添加书签" bindlongtap="longtapTip"/>
+    <image class="nav-button" src="../../data/icon/import.svg" id="nip" data-play="hover" data-mybind="checkClipboard" bindtap="{{reading.hover}}" data-tip="导入剪贴板内容" bindlongtap="longtapTip" />
+  </view>
+  <view class="navigation-bar">
+    <image class="nav-button" src="../../data/icon/bookshelf.svg" data-url="../bookshelf/bookshelf" bindtap="navigateTo" data-tip="书架" bindlongtap="longtapTip" />
+    <image class="nav-button" src="../../data/icon/save_w.svg" bindtap="saveBookByClip" data-tip="保存剪贴板内容" bindlongtap="longtapTip" />
+    <!--image class="nav-button" src="../../data/icon/word.png" data-url="../wordbook/wordbook" bindtap="navigateTo" /-->
+    <image class="nav-button" src="../../data/icon/search_w.svg" id="nds" data-play="hover" bindtap="{{reading.showHiddenDict}}" data-tip="词典查词" bindlongtap="longtapTip" />
+    <image class="nav-button" src="../../data/icon/me.svg" />
+  </view>
+    <!--view class="button" data-url="../bookshelf/bookshelf" bindtap="navigateTo">bookshelf</view>
+    <view class="button" data-url="../wordbook/wordbook" bindtap="navigateTo">wordbook</view>
+    <view class="button" bindtap="testAddArticle" >add</view>
+    <view class="button" bindtap="testGetBooks" >get</view-->
+</view>
+
+
+<!--滑动翻译框
+
+-->
+<movable-area class="verticality-move">
+  <movable-view direction="vertical" inertia="true" y="{{transBox_p['y']}}" class="trans-box" bindtouchstart="{{reading.hiddenExplainBox}}">
+    <view class="trans-box-button-container">
+    </view>
+    <view class="trans-box-input">
+      <image wx:if="{{translate_result['canPlay']}}" class="eb-phone-icon" src="../../data/icon/phone.svg" data-type="" id="a-ss" data-play="audioPlay" data-mybind="toPlaySentenceAudio" bindtap="{{reading.hover}}"></image>
+      <!--text class="t-i-text" id="t-2333" bindtap="lookUpWordDirect">{{translate_result['tranInput']}}</text-->
+      <block wx:if="{{transBox_p['s']!=-1}}" wx:for="{{wordList[transBox_p['s']]}}" wx:for-item="word">
+        <text class="t-i-text" id="t-{{index}}" data-sindex="{{transBox_p['s']}}" data-windex="{{index}}" bindtap="lookUpWordDirect">{{word}}</text>
+      </block>
+    </view>
+    <view class="trans-box-tran">
+      <block wx:for="{{translate_result['tran']}}" wx:for-item="word">
+        <text id="tr-{{index}}" data-word="{{word}}" bindtap="lookUpWordDirect">{{word}}</text>
+      </block>
+      <!--text>{{translate_result['tran']}}</text-->
+    </view>
+  </movable-view>
+</movable-area>
+
+
+<!--划词单词释义框-->
+<view class="explain-box" style="visibility:{{explainBox_position['visibility']}};top:{{explainBox_position['t']}}px;left:{{explainBox_position['l']}}px;" explainBox="{{explainBox_position}}" change:explainBox="{{reading.wordColour}}">
+  <scroll-view wx:if="{{explainBox_position['id'] == lookUp_result['id']}}" scroll-y class="eb-explain-scroll">
+    <view class="eb-word-container">
+      <text class="eb-word">{{reading.capitalize(lookUp_result['word'])}}</text>
+      <image wx:if="{{!lookUp_result['ukspeech'] && !lookUp_result['usspeech'] && lookUp_result['speech']}}" class="eb-phone-icon" id="a-s" src="../../data/icon/phone.svg" data-type="speech" data-mybind="toPlayAudio" data-play="audioPlay" bindtap="{{reading.hover}}"></image>
+    </view>
+    <view class="eb-phone-container">
+      <text class="eb-ukphone">{{(lookUp_result['ukphone'] || lookUp_result['ukspeech'])?'英':''}} {{(lookUp_result['ukphone'])? lookUp_result['ukphone']:''}}</text>
+      <image class="eb-phone-icon" hover-class="hover"  wx:if="{{lookUp_result['ukspeech']}}" src="../../data/icon/phone.svg" data-type="uk" id="a-uks" data-play="audioPlay" data-mybind="toPlayAudio" bindtap="{{reading.hover}}"></image>
+      <text class="eb-usphone" >{{(lookUp_result['usphone'] || lookUp_result['usspeech'])?'美':''}} {{(lookUp_result['usphone'])? lookUp_result['usphone']:''}}</text>
+      <image class="eb-phone-icon" wx:if="{{lookUp_result['usspeech']}}" src="../../data/icon/phone.svg" data-type="us" data-play="audioPlay" id="a-uss" data-mybind="toPlayAudio" bindtap="{{reading.hover}}"></image>
+    </view>
+    <text wx:for="{{lookUp_result['explain']}}" class="eb-explain">{{item}}</text>
+  </scroll-view>
+  <view class="explain-loading" wx:else>
+    <view class="e-l-ti"/>
+    <view class="e-l-te" wx:for="{{3}}"/>
+  </view>
+  <image class="eb-arrow" src="../../data/icon/explainBox2.svg" style="{{explainBox_position['arrowStyle']}}"></image>
+</view>
+
+
+<!--弹出输入框 test-->
+<view  input="{{inputBox}}" change:input="{{reading.inputBox}}" class="input">
+  <!--view class="input-masking"/-->
+  <block wx:if="{{inputBox == 'saveBook'}}">
+    <text class="input-prompt">保存剪贴板内容:</text>
+    <input class="input-input" value="{{inputText}}" placeholder="New Article" focus="{{inputFocus}}" data-certain="true" bindconfirm="setArticleTitle" bindinput="getInput"></input>
+    <view class="input-button" id="input-cancel" data-certain="false" bindtap="setArticleTitle">取消</view>
+    <view class="input-button" data-certain="true" bindtap="setArticleTitle">确定</view>
+  </block>
+  <block wx:elif="{{inputBox == 'bookmark'}}">
+    <text class="input-prompt">请输入书签标题:</text>
+    <input class="input-input" value="{{inputText}}" placeholder="New Bookmark" focus="{{inputFocus}}" data-certain="true" bindconfirm="addBookmark" bindinput="getInput"></input>
+    <view class="input-button" id="input-cancel" data-certain="false" bindtap="addBookmark">取消</view>
+    <view class="input-button" data-certain="true" bindtap="addBookmark">确定</view>
+  </block>
+</view>
+
+<!--页码-目录-书签-->
+<view class="catalog">
+  <view class="catalog-bg" bindtap="{{reading.catalogBox}}" />
+  <text class="catalog-title">{{title}}</text>
+  <view  class="catalog-type">
+    <view class="catalog-button" bindtap="{{reading.switchToBookmark}}">书签</view>
+    <view class="catalog-button" bindtap="{{reading.switchToPageNum}}">页码</view>
+    <view class="button-select" />
+  </view>
+  <view class="catalog-scroll-c">
+    <scroll-view class="catalog-bookmarks bookmarks-hidden" scroll-y bookmarks="{{bookmarks}}" change:bookmarks="{{reading.refreshBookmark}}">
+      <!--书签-->
+      <block wx:for="{{bookmarks}}" wx:for-index="i">
+        <view class="catalog-item" hover-class="hover" id="c-b-{{i}}" data-index="{{i}}" bindtap="goToBookmark" bindtouchmove="{{reading.btouchMove}}" bindtouchstart="{{reading.btouchStart}}" bindtouchend="{{reading.btouchEnd}}">
+          <image class="item-icon" src="../../data/icon/tag.svg" />
+          <text class="item-title">{{item['title']}}</text>
+          <image class="b-delete-icon" id="b-d-{{i}}" src="../../data/icon/delete.svg" bindtap="" />
+        </view>
+      </block>
+      <image wx:if="{{bookmarks.length == 0}}" class="none-bookmark-tip" src="../../data/noneBookmark.svg" />
+    </scroll-view>
+    <scroll-view class="catalog-page-number" scroll-y>
+      <!--页码-->
+      <block wx:for="{{page['sum']}}" wx:for-index="">
+        <view class="catalog-item {{(page['now'] == (item + 1))?'catalog-current':''}}" id="c-{{item + 1}}" hover-class="hover" data-index="{{item + 1}}" bindtap="goBookPage">
+          <image class="item-icon" src="../../data/icon/tag{{(page['now'] == (item + 1))?'_w':''}}.svg" />
+          <text class="item-title">{{item + 1}}</text>
+        </view>
+      </block>
+    </scroll-view>
+  </view>
+</view>
+
+
+<!--查词，详细-->
+<view class="dict-more">
+  <view class="dict-topColumn">
+    <image class="dict-back" src="../../data/icon/back.svg" bindtap="{{reading.showHiddenDict}}" />
+    <view class="fillet-input">
+      <input class="fillet-input-input" focus="{{inputFocus}}" placeholder="查词" value="{{inputText}}" bindinput="filletInput" bindconfirm="" />
+      <image wx:if="{{inputText != ''}}" class="fillet-input-clear" src="../../data/icon/cancel.svg" bindtap="findInputClear" />
+    </view>
+  </view>
+  <view class="dict-suggest" wx:if="{{inputText != ''}}">
+    <view class="suggest-item" wx:for="{{dictMore.suggest}}" wx:for-item="item" bindtap="">
+      <text class="suggest-word">{{item[0]}}</text>
+      <text>{{' ' + reading.textSlice(item[1],24)}}</text>
+    </view>
+  </view>
+  <view class="">
+    <view hidden class="">Hello</view>
+
+  </view>
+</view>

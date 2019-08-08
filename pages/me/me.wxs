@@ -1,0 +1,30 @@
+
+/**todo输入，显示textarea */
+function inputTodo(e,owner){
+  var textarea = owner.selectComponent('.text-edit');
+  textarea.setStyle({
+    display:'block'
+  })
+  var todo = e.currentTarget.dataset.todo;
+  if(todo == 'edit'){
+    var index = e.currentTarget.dataset.index.toString()
+    if(! index) index = 0
+    textarea.callMethod('eidtTodo',index)
+  }else if(todo =="new"){
+    textarea.callMethod('newTodo','')
+  }
+}
+
+function inputDone(e, owner){
+  var textarea = owner.selectComponent('.text-edit');
+  textarea.setStyle({
+    display: 'none'
+  })
+  textarea.callMethod('inputDone',e)
+}
+
+
+module.exports = {
+  inputTodo: inputTodo,
+  inputDone: inputDone
+}

@@ -1,0 +1,17 @@
+<!--pages/wordbook/wordbook.wxml-->
+<wxs module="setNavHeight" src="../../js/setNavHeight.wxs" />
+
+<view class="navigationBar"  wxs="{{systemInfo}}" change:wxs="{{setNavHeight.setNavHeight}}">
+  <view class="nav-title">生词本</view>
+</view>
+
+<view style="position:relative;top:260px;width:100vw;text-align:center;font-size:30px;color:#555;">开发中...</view>
+
+<!--view style="top:200px;position:relative;">
+  <view bindtap="test" style="display:inline-block;">holle </view>
+  <view bindtap="test"  style="display:inline-block;">word</view>
+  <view bindtap="test"  style="display:inline-block;">gril </view>
+  <view bindtap="test"  style="display:inline-block;">boy </view>
+  <view bindtap="test"  style="display:inline-block;">good </view>
+  <text bindtap="test">wonderful</text>
+</view-->

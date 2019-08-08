@@ -1,0 +1,106 @@
+/* pages/storeList/storeList.wxss */
+.cover-image{
+  position:fixed;
+  width:100vw;
+  height:80vw;
+  top:0;
+  left:0;
+  background-color:#aaa;
+}
+.cover-image-image{
+  position:relative;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+}
+.navigate-back{
+  width:20px;
+  height:20px;
+  position:absolute;
+  left:10px;
+  top:7px;
+  padding-top:26px 6px 6px 6px;
+  z-index:10;
+  transition: all 0.5s;
+}
+
+.item-box{
+  position:relative;
+  top:80vw;
+  width:calc(100% - 40px);
+  min-height:calc(100vh - 80vw);
+  padding: 0 20px;
+  color:#333;
+  background-color:#fff;
+}
+.style-fix{
+  position:absolute;
+  top:-40px;
+  left:0;
+  width:100vw;
+  height:40px;
+  background:linear-gradient(180deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,1) 100% );
+  border-radius:20px 20px 0 0;
+}
+.title-text{
+  position:relative;
+  font-size:24px;
+  top:-10px;
+}
+
+.list-item{
+  width:100%;
+  height:60px;
+  line-height:60px;
+  align-items:center;
+  display:flex;
+}
+.item-icon{
+  width:40px;
+  height:40px;
+  margin-right:10px;
+}
+.item-title{
+  width:calc(100% - 50px);
+  height:100%;
+  border-top:1px solid rgba(0,0,0,0.1);
+}
+.item-title-first{
+  border-top:1px solid rgba(0,0,0,0);
+}
+
+/**点击动画*/
+.hover{
+  animation: tap 0.3s;
+}
+
+@keyframes tap{
+  0%{
+    transform:scale(1)
+  }
+  10%{
+    transform:scale(0.9)
+  }
+  50%{
+    transfrom:scale(1.1)
+  }
+  90%{
+    transform:scale(0.9)
+  }
+  100%{
+    transform:scale(1)
+  }
+}
+
+.item-title-placeholder{
+  width:calc(100% - 50px);
+  height:25px;
+  background-color:#eee;
+}
+
+.placeholder{
+  background-color:#eee;
+}
+
+

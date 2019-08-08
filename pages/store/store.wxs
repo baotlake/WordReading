@@ -1,0 +1,62 @@
+
+/**input发现一下获得焦点触发，输入框变宽 */
+
+function inputFocus(e, ownerInstance){
+  console.log('input get focus')
+  var instance = ownerInstance.selectComponent('.nav-input')
+  instance.addClass('nav-input-focus ')
+  // var title = ownerInstance.selectComponent('.nav-title')
+  // title.setStyle({
+  //   opacity:'0'
+  // })
+}
+
+function loseFocus(e,ownerInstance){
+  console.log('input lose focus')
+  var instance = ownerInstance.selectComponent('.nav-input')
+  instance.removeClass('nav-input-focus')
+  // var title = ownerInstance.selectComponent('.nav-title')
+  // title.setStyle({
+  //   opacity: '1'
+  // })
+  // 失去焦点，考虑调用输入完成函数
+  
+}
+
+
+// swiper位置 适配不同机型
+function setSwiperPos(systemInfo, oldValue, ownerInstance, instance){
+  // console.log('set nav height--------------------------------')
+  if (systemInfo) {
+    // console.log('适应 nav bar 高度========')
+    var detailSwiper = ownerInstance.selectAllComponents('.detail-swiper')
+    var cardBottom;
+    var system = systemInfo.system
+    if (systemInfo.system.substring(0, 2) == 'iOS') {
+      cardBottom = 'calc((' + '100vh - 44px - ' + systemInfo.statusBarHeight + 'px - 970rpx) / 2)' 
+    } else {
+      cardBottom = 'calc((' + '100vh - 48px - ' + systemInfo.statusBarHeight + 'px - 970rpx) / 2)'
+    }
+    for (var i = 0; i < detailSwiper.length; i++){
+      detailSwiper[i].setStyle({
+        'bottom': cardBottom
+      })
+    }
+    
+  }
+}
+
+
+
+
+
+
+
+
+
+
+module.exports = {
+  inputFocus: inputFocus,
+  loseFocus: loseFocus,
+  setSwiperPos: setSwiperPos
+}

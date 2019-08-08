@@ -1,0 +1,515 @@
+
+
+
+var sum_top = 0;
+var lastTop = 0;
+var navHeight = 120;       // statusBarHeight + navHeight
+var topColumn;
+
+
+/**顶栏下滑显示，上滑隐藏
+ * e.detail = {deltaX:0,deltaY:-1.22,scrollHeight:766,scrollLeft:0,scrollTop:1.22,scrollWidth:411}
+ */
+function navScroll(e,s){
+  // var topColumn = s.selectComponent('.top-column')
+  // topColumn 在setNavData中赋值
+  if (topColumn){
+    var scrollTop = e.detail.scrollTop
+    if (lastTop < scrollTop) {
+      // 页面向上滑动，向下浏览，关闭，lastTop < scrollTop，sum_top变小
+      if (sum_top <= -navHeight) {
+        // 已完全隐藏
+
+      } else {
+        sum_top += scrollTop - lastTop
+        if (sum_top > navHeight) sum_top = navHeight
+        topColumn.setStyle({
+          'transform': 'translateY(' + sum_top + 'px)'
+        })
+      }
+    } else {
+      // 向下，返回查看上面的内容，显示， lastTop > scrollTop, sum_top变大
+      if (sum_top <= 0) {
+        // 已完全显示
+
+      } else {
+        sum_top += scrollTop - lastTop
+        if (sum_top < 0) sum_top = 0
+        topColumn.setStyle({
+          'transform': 'translateY(' + sum_top + 'px)'
+        })
+      }
+    }
+    // 记录本次的值，用于判断滑动方向
+    lastTop = scrollTop
+  }else{
+    topColumn = s.selectComponent('.top-column')
+  }
+}
+
+/** 根据不同机型设置top column高度
+ * 将top column移动到下面后，这个可以不要
+*/
+function setNavData(systemInfo, oldValue, ownerInstance, instance){
+  var navBar = ownerInstance.selectComponent('.navigationBar')
+  topColumn = ownerInstance.selectComponent('.top-column')
+  var catalog = ownerInstance.selectComponent('.catalog-title')
+  if(systemInfo){
+    var statusBarHeight = systemInfo.statusBarHeight
+    // if (isNaN(statusBarHeight)) statusBarHeight = 20
+    if (systemInfo.system.substring(0, 2) == 'iOS') {
+      // 记录topColumn总高， 46为operateBar的高度
+      navHeight = 44 + statusBarHeight + 46
+      // 适配
+      navBar.setStyle({
+        height: '44px',
+        'padding-top': statusBarHeight + 'px'
+      })
+      // 设置书签页标题栏高度
+      catalog.setStyle({
+        'padding-top': statusBarHeight + 'px',
+        height: '44px',
+      })
+    } else {
+      // 记录topColumn总高， 46为operateBar的高度
+      navHeight = 48 + statusBarHeight + 46
+      // 适配
+      navBar.setStyle({
+        height: '48px',
+        'padding-top': statusBarHeight + 'px'
+      })
+      // 设置书签页标题栏高度
+      catalog.setStyle({
+        'padding-top': statusBarHeight + 'px',
+        height: '48px',
+      })
+    }
+  }  
+}
+
+// /**展示，隐藏顶栏 */
+// function sTouchMove(e, owner) {
+  // console.log('sTouchMove')
+  // var instance = s.selectComponent('.top-column')
+  // var scrollTop = e.changedTouches[0].clientY
+  // if (lastTop < scrollTop) {
+  //   // 页面向上滑动，向下浏览，关闭，lastTop < scrollTop，sum_top变小
+  //   if (sum_top < -110) {
+  //     // 已完全隐藏
+
+  //   } else {
+  //     sum_top += lastTop - scrollTop
+  //     if (sum_top < -110) sum_top = -110
+  //     instance.setStyle({
+  //       'transform': 'translateY(' + sum_top + 'px)'
+  //     })
+  //   }
+  // } else {
+  //   // 向下，返回查看上面的内容，显示， lastTop > scrollTop, sum_top变大
+  //   if (sum_top > 0) {
+  //     // 已完全显示
+
+  //   } else {
+  //     sum_top += lastTop - scrollTop
+  //     if (sum_top > 0) sum_top = 0
+  //     instance.setStyle({
+  //       'transform': 'translateY(' + sum_top + 'px)'
+  //     })
+  //   }
+  // }
+
+  // // 记录本次的值，用于判断滑动方向
+  // lastTop = scrollTop
+// }
+
+/**input输入框显示与否 bintdtap调用 */
+function inputShow(e,ownerInstance){
+  // console.log('ownerInstance ->', ownerInstance,e)
+  if (ownerInstance != undefined){
+    var instance = ownerInstance.selectComponent('.input')
+    var inputShow = instance.hasClass('input-show')
+    if (inputShow) {
+      instance.removeClass('input-show')
+    } else {
+      instance.addClass('input-show')
+    }
+  }
+}
+/**input输入框显示与否,change:porp调用*/
+function inputBox(newValue, oldValue, ownerInstance, instance){
+  console.log('===================== ->',newValue)
+  if(newValue != undefined){
+    // console.log('call inputTitle()')
+    inputShow('aaaaaaaaa', ownerInstance)
+  }
+}
+
+
+/**catalog目录显示与否 */
+function catalogBox(e,ownerInstance,instance){
+  var instance = ownerInstance.selectComponent('.catalog')
+  var catalogShow = instance.hasClass('catalog-show')
+  var bg = ownerInstance.selectComponent('.catalog-bg')
+  if(catalogShow){
+    instance.removeClass('catalog-show')
+    bg.removeClass('catalog-bg-show')
+  }else{
+    instance.addClass('catalog-show')
+    bg.addClass('catalog-bg-show')
+  }
+  wxsHover(e,ownerInstance) // 点击动画
+}
+
+/**目录点击效果 */
+function tapCatalog(e,ownerInstance){
+  // var instance = ownerInstance.selectComponent('.')
+  // var id = 'c-' + e.currentTarget.dataset.index
+  // var instance = ownerInstance.selectComponent('#' + id)
+  // instance.addClass('pageNum-hasread')
+}
+
+/**书签滑动删除效果 */
+var bookmark;
+var fX;
+var fY;
+var x;
+var y;
+var deleteIcon;
+function btouchStart(e,ownerInstance){
+  // console.log('touchStart')
+  var index = e.currentTarget.dataset.index
+  bookmark = ownerInstance.selectComponent('#c-b-' + index)
+  deleteIcon = ownerInstance.selectComponent('#b-d-' + index)
+  fX = e.touches[0]['clientX']
+  fY = e.touches[0]['clientY']
+}
+function btouchMove(e, ownerInstance){
+  // console.log('touchMove')
+  x = e.touches[0]['clientX'] - fX
+  y = e.touches[0]['clientY'] - fY
+  bookmark.setStyle({
+    transform: 'translate(' + x + 'px, '+ y + 'px)'
+  })
+  bookmark.addClass('b-moving')
+  if(x > 90 || x < -90){
+    deleteIcon.addClass('b-delete')
+  }else{
+    deleteIcon.removeClass('b-delete')
+  }
+}
+function btouchEnd(e){
+  bookmark.setStyle({
+    transform: 'translate( 0px, 0px)'
+  })
+  bookmark.removeClass('b-moving')
+  if(x > 90 || x < -90){
+    // 删除
+    deleteIcon.removeClass('b-delete')
+    bookmark.addClass('b-deleted')
+    bookmark.callMethod('deleteBookmark',e)
+  }
+  x = 0
+  y = 0
+  fX = 0
+  fY = 0
+}
+function refreshBookmark(newValue, oldValue, ownerInstance, instance){
+  // 移除class b-deleted， 因为添加b-deleted只是动画删除，500ms后会真正删除，bookmarks会刷新，bookmarks index会变，导致被删除书签的下一个书签不显示
+  var b = ownerInstance.selectAllComponents('.b-deleted')
+  for(var i=0; i < b.length; i++){
+    b[i].removeClass('b-deleted')
+  }
+}
+
+/**目录切换页码-书签 */
+function switchToBookmark(e, ownerInstance){
+  var button = ownerInstance.selectComponent('.button-select')
+  var bkView = ownerInstance.selectComponent('.catalog-bookmarks')
+  var pnView = ownerInstance.selectComponent('.catalog-page-number')
+  button.setStyle({
+    transform:'translateX(0px)'
+  })
+  bkView.removeClass('bookmarks-hidden')
+  pnView.addClass('pageNum-hidden')
+}
+function switchToPageNum(e, ownerInstance){
+  var button = ownerInstance.selectComponent('.button-select')
+  var bkView = ownerInstance.selectComponent('.catalog-bookmarks')
+  var pnView = ownerInstance.selectComponent('.catalog-page-number')
+  button.setStyle({
+    transform: 'translateX(115px)'
+  })
+  bkView.addClass('bookmarks-hidden')
+  pnView.removeClass('pageNum-hidden')
+}
+
+/**废弃 - 正文内点击查词 */
+function lookupWord(e,ownerInstance){
+  console.log('--------------------')
+  var word_index = [e.currentTarget.dataset['sindex'], e.currentTarget.dataset['windex']]
+  // var id = e.currentTarget.dataset['id']
+  var word = ownerInstance.selectComponent('#w-' + word_index[0] + '-' + word_index[1])
+  // var word = ownerInstance.selectComponent('#' + id)
+  // var sentence = ownerInstance.selectComponent('#s-' + word_index[0])
+  var loading = ownerInstance.selectComponent('.loading-an')
+  // console.log('lookup word->', 'w-' + word_index[0] + '-' + word_index[1], 's-' + word_index[0])
+  word.addClass('selectWord')
+  // sentence.addClass('inSentence')
+  loading.setStyle({
+    top: e['changedTouches'][0]['clientY'] - 30 + 'px',
+    left: e.changedTouches[0].clientX - 22 + 'px',
+    display:'flex'
+  })
+  // triggerEvent('lookUpWord',e)
+  word.callMethod('lookUpWord',e)
+  word.callMethod('bindtest',e) // test
+  ownerInstance.callMethod('setLogSindex', e.currentTarget.dataset['sindex'])
+  // console.log('_relatedInfo ->', e._relatedInfo.anchorTargetText)
+}
+
+/**划词着色，显示加载动画 */
+function wordColour(newValue, oldValue, ownerInstance, instance){
+  if (newValue['id']){
+    var word = ownerInstance.selectComponent('#' + newValue['id'])
+    var loading = ownerInstance.selectComponent('.loading-an')
+    word.addClass('selectWord')
+    loading.setStyle({
+      top: newValue['touchY'] - 30 + 'px',
+      left: newValue['touchX'] - 22 + 'px',
+      display: 'flex'
+    })
+    var explainBox = ownerInstance.selectComponent('.explain-box')
+    explainBox.setStyle({
+      visibility: newValue['visibility']
+    })
+  }
+}
+
+
+/**隐藏explainbox划词释义框 */
+function hiddenExplainBox(e,ownerInstance){
+  /**不能直接setStyle，因为wxs的优先级高，导致explainBox不显示 */
+  var explainBox = ownerInstance.selectComponent('.explain-box')
+  explainBox.setStyle({
+    visibility:'hidden'
+  })
+  console.log('hiddenExplainBox')
+  var word = ownerInstance.selectComponent('.selectWord')
+  // ownerInstance.callMethod('hiddenExplain')
+  if(word){
+    word.removeClass('selectWord')
+    word.addClass('selected-w')
+    // sentence.removeClass('inSentence')
+  }
+}
+
+function hiddenLoading(newValue, oldValue, ownerInstance, instance){
+  console.log('hidden loading')
+  var loading = ownerInstance.selectComponent('.loading-an')
+  loading.setStyle({
+    display: 'none'
+  })
+}
+
+/**清除着色 */
+function clearColour(newValue, oldValue, ownerInstance, instance){
+  console.log('clearCoulour')
+  var slist = ownerInstance.selectAllComponents('.selected-s')
+  var wlist = ownerInstance.selectAllComponents('.selected-w')
+  for(var i = 0; i < slist.length; i++){
+    slist[i].removeClass('selected-s')
+  }
+  for(var i = 0; i < wlist.length;i++){
+    wlist[i].removeClass('selected-w')
+  }
+  var s = ownerInstance.selectComponent('.sentenceBackground')
+  var w = ownerInstance.selectComponent('.selectWord')
+  if(s){
+    s.removeClass('sentenceBackground')
+  }
+  if (w) {
+    w.removeClass('selectWord')
+  }
+  var ins = ownerInstance.selectComponent('.inSentence')
+  if(ins){
+    ins.removeClass('inSentence')
+  }
+}
+
+var touchXY = []; // [[firstX,firstY],[lastX,lastY]]
+/**滑动翻译 */
+function touchStart(e, ownerInstance){
+  var moveXY = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
+  touchXY[0] = moveXY
+}
+function touchMove(e, ownerInstance){
+  //console.log('operateClass.touchMove', e)
+  var moveXY = [e.changedTouches[0].clientX, e.changedTouches[0].clientY]
+  if (touchXY.length == 0) {
+    touchXY[0] = moveXY
+  } else {
+    touchXY[1] = moveXY
+  }
+}
+function touchEnd(e, ownerInstance){
+  // console.log('operateClass.touchEnd', e)
+  var sindex = e.target.dataset.sindex
+  if (touchXY.length > 1) {
+    /** 滑动 */
+    var moveX = touchXY[1][0] - touchXY[0][0]
+    var moveY = touchXY[1][1] - touchXY[0][1]
+    if (Math.abs(moveX) / Math.abs(moveY)  > 3 & Math.abs(moveX) > 10) {
+      // 横向滑动 翻译整个句子
+      // console.log('横向滑动 翻译', moveX, moveY)
+      translate(sindex, ownerInstance)
+    } else {
+      // console.log('其他滑动 xy', moveX, moveY)
+    }
+  } else if (touchXY.length == 1) {
+    /** 快速滑动 */
+    // console.log('快速滑动 翻译', moveX, moveY)
+    // translate(sindex, ownerInstance)
+  }
+  touchXY = [] // 清空
+  ownerInstance.callMethod('setLogSindex', sindex)
+}
+var transBoxUp = false
+function translate(sindex,ownerInstance){
+  var sentence = ownerInstance.selectComponent('#s-' + sindex)
+  var transBox = ownerInstance.selectComponent('.trans-box')
+  sentence.callMethod('querySentence_wxs', { 'index': sindex })
+  sentence.addClass('selectSentence')
+  // transBox.addClass('trans-box-up')'
+  transBox.callMethod('transBoxUp',{'sindex':sindex})
+  transBoxUp = true; // 要注意为true并不一定都在上面，也有可能用户手动滑下去
+}
+function transEnd(ownerInstance){
+  var transBox = ownerInstance.selectComponent('.trans-box')
+  transBox.removeClass('trans-box-up')
+  var selectedS = ownerInstance.selectComponent('.selectSentence')
+  if (selectedS){
+    selectedS.removeClass('selectSentence')
+    selectedS.addClass('selected-s')
+  }
+  transBox.callMethod('transBoxUp','down')
+
+}
+
+/**点击页面其他部分，隐藏弹窗 */
+function hiddenAll(e, ownerInstance){
+  // 隐藏翻译框
+  if (transBoxUp) {
+    transEnd(ownerInstance)
+  }
+  hiddenExplainBox(null,ownerInstance)
+}
+
+/**返回text指定长度（l），多余的以‘...’显示 */
+function textSlice(text,l){
+  if(text.length > l){
+    return text.substring(0, l) + '...'
+  }else{
+    return text
+  }
+}
+
+/**显示查词界面 */
+function showHiddenDict(e,owner){
+  console.log('show hidden dict more')
+  var dict = owner.selectComponent('.dict-more');
+  if (dict.hasClass('dice-more-show')){
+    console.log('remove')
+    dict.removeClass('dice-more-show')
+    dict.callMethod('findInputClear')   // 清空输入框
+  }else{
+    console.log('add')
+    dict.addClass('dice-more-show')
+    hiddenAll('',owner)  // 隐藏查词翻译弹窗
+    dict.callMethod('inputFocus')
+  }
+}
+
+/**hover 动画，hover-clsss只能用在view中,用此函数的标签需要有id
+ * 调用data-mybind中的逻辑层函数，传入e
+ * 播放data-play中的动画，需要注意的使，data-play只传入一个class,但是wxs里必须有一个副本class，后缀+1,两个循环播放
+ */
+function hover(e,owner){
+  console.log('hover id=>',e.currentTarget.id)
+  var id = e.currentTarget.id
+  var playclass = e.currentTarget.dataset.play
+  var hover = owner.selectComponent('#'+id)
+  if(hover.hasClass(playclass)){
+    hover.removeClass(playclass)
+    hover.addClass(playclass + '1')
+  }else{
+    hover.removeClass(playclass + '1')
+    hover.addClass(playclass)
+  }
+  var bind = e.currentTarget.dataset.mybind  //逻辑层
+  if(bind){
+    console.log('cal method ->',bind)
+    hover.callMethod(bind,e)
+  }else{
+    console.log('bind false ->',bind)
+  }
+}
+
+/**hover wxs函数调用版 
+ * tag需要有id,data-play
+*/
+function wxsHover(e,owner){
+  console.log('hover id=>', e.currentTarget.id)
+  var id = e.currentTarget.id
+  var playclass = e.currentTarget.dataset.play
+  var hover = owner.selectComponent('#' + id)
+  if(hover){
+    if (hover.hasClass(playclass)) {
+      hover.removeClass(playclass)
+      hover.addClass(playclass + '1')
+    } else {
+      hover.removeClass(playclass + '1')
+      hover.addClass(playclass)
+    }
+  }
+}
+
+/**首字母大写 */
+function capitalize(text){
+  if(text){
+    text = text.substring(0,1).toUpperCase() + text.substring(1,)
+    return text
+  }else{
+    return ''
+  }
+}
+
+
+
+module.exports = {
+  navScroll: navScroll,
+  inputShow: inputShow,
+  inputBox:inputBox,
+  catalogBox: catalogBox,
+  // tapCatalog: tapCatalog,
+  btouchStart: btouchStart,
+  btouchMove:btouchMove,
+  btouchEnd: btouchEnd,
+  switchToBookmark: switchToBookmark,
+  switchToPageNum: switchToPageNum,
+  lookupWord: lookupWord,
+  hiddenLoading: hiddenLoading,
+  clearColour: clearColour,
+  touchStart: touchStart,
+  touchMove: touchMove,
+  touchEnd: touchEnd,
+  hiddenAll: hiddenAll,
+  textSlice: textSlice,
+  showHiddenDict: showHiddenDict,
+  refreshBookmark: refreshBookmark,
+  hover: hover,
+  setNavData: setNavData,
+  capitalize: capitalize,
+  hiddenExplainBox: hiddenExplainBox,
+  wordColour: wordColour
+}
+

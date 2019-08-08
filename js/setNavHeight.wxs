@@ -1,0 +1,44 @@
+
+
+function setNavHeight(systemInfo, oldValue, ownerInstance, instance){
+  console.log('set nav height--------------------------------')
+  if(systemInfo){
+    console.log('适应 nav bar 高度========')
+    var navBar = ownerInstance.selectComponent('.navigationBar')
+    var navHeight;
+    var system = systemInfo.system
+    if (systemInfo.system.substring(0,2) == 'iOS') {
+      navHeight = '44px'
+    } else {
+      navHeight = '48px'
+    }
+    navBar.setStyle({
+      'padding-top': systemInfo.statusBarHeight + 'px',
+      'height': navHeight
+    })
+  }
+}
+
+function setNavPadding(systemInfo, oldValue, ownerInstance, instance){
+  console.log('set nav height--------------------------------')
+  if (systemInfo) {
+    console.log('适应 nav bar 高度========')
+    var navBar = ownerInstance.selectComponent('.navigationBar')
+    var navHeight;
+    var system = systemInfo.system
+    // if (systemInfo.system.substring(0, 2) == 'iOS') {
+    //   navHeight = '44px'
+    // } else {
+    //   navHeight = '48px'
+    // }
+    navBar.setStyle({
+      'padding-top': systemInfo.statusBarHeight + 'px',
+    })
+  }
+}
+
+
+module.exports = {
+  setNavHeight:setNavHeight,
+  setNavPadding: setNavPadding
+}
