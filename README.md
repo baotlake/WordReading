@@ -8,19 +8,20 @@
 
 
 # 扫码体验-划词英语阅读
-![划词英语阅读小程序码](./README\WordReadingCode.webp)
+![划词英语阅读小程序码](./README/WordReadingCode.webp)
+
 
 # 截图
 ### 书架页
-![](./README\Screenshot1.webp)
+![](./README/Screenshot1.webp)
 ### 阅读页 - 点击查词
-![](./README\Screenshot2.webp)
+![](./README/Screenshot2.webp)
 ### 阅读页 - 横向滑动翻译
-![](./README\Screenshot3.webp)
+![](./README/Screenshot3.webp)
 ### 阅读页 - 翻译框内点击查词
-![](./README\Screenshot4.webp)
+![](./README/Screenshot4.webp)
 ### 阅读页 - 输入查词
-![](./README\Screenshot5.webp)
+![](./README/Screenshot5.webp)
 
 # 目前遇到的问题及设想
 ## 问题一：错词
